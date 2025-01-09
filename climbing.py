@@ -3,6 +3,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 from folium.plugins import MarkerCluster
+import ast
 
 # Fonction pour charger les données
 @st.cache_data
@@ -30,18 +31,31 @@ icon_image = "https://img.icons8.com/?size=100&id=Gp8yKV8izL1K&format=png&color=
 # Contenu du popup avec les informations à la ligne
 
 
+# Appliquer ast.literal_eval sur toutes les colonnes concernées
+columns_to_convert = ["type_escalade", "public", "exposition", "saison"]
+for col in columns_to_convert:
+    df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+
+# Carte Folium
+m = folium.Map(location=[44.1, 5.1], zoom_start=12)
+
+# Boucle pour ajouter les marqueurs
 for index, row in df.iterrows():
-    # Préparer le contenu du popup avec les balises HTML correctement formatées
+    # Construire le contenu du popup
+    types = ", ".join(row["type_escalade"])  # Transformation de la liste en chaîne
+    public = ", ".join(row["public"])
+    exposition = ", ".join(row["exposition"])
+    saison = ", ".join(row["saison"])
+    
     popup_html = f"""
     <div style='width:300px'>
     <b>Nom :</b> {row['nom']}<br>
-    <b>Type d'escalade :</b> {row['type_escalade']}<br>
-    <b>Difficulté :</b> {row['public']}<br>
-    <b>Exposition :</b> {row['exposition']}<br>
-    <b>Période :</b> {row['saison']}<br>
+    <b>Type d'escalade :</b> {types}<br>
+    <b>Difficulté :</b> {public}<br>
+    <b>Exposition :</b> {exposition}<br>
+    <b>Période :</b> {saison}<br>
     </div>
     """
-    
     # Créer le marqueur avec le popup et l'icône personnalisée
     marker = folium.Marker(
         location=[row['coor_1'], row['coor_2']],
