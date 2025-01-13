@@ -22,7 +22,7 @@ map_folium = folium.Map(
 )
 
 # Ajouter les données avec FastMarkerCluster
-locations = df[['coor_1', 'coor_2']].values.tolist()
+locations = df[['latitude', 'longitude']].values.tolist()
 marker_cluster = MarkerCluster().add_to(map_folium)
 
 # Ajouter les marqueurs
@@ -43,13 +43,13 @@ m = folium.Map(location=[44.1, 5.1], zoom_start=12)
 for index, row in df.iterrows():
     # Construire le contenu du popup
     types = ", ".join(row["type_escalade"])  # Transformation de la liste en chaîne
-    public = ", ".join(row["public"])
-    exposition = ", ".join(row["exposition"])
-    saison = ", ".join(row["saison"])
+    public = ", ".join(row["climbing_types"])
+    exposition = ", ".join(row["est"])
+    saison = ", ".join(row["north"])
     
     popup_html = f"""
     <div style='width:300px'>
-    <b>Nom :</b> {row['nom']}<br>
+    <b>Nom :</b> {row['name']}<br>
     <b>Type d'escalade :</b> {types}<br>
     <b>Difficulté :</b> {public}<br>
     <b>Exposition :</b> {exposition}<br>
@@ -58,7 +58,7 @@ for index, row in df.iterrows():
     """
     # Créer le marqueur avec le popup et l'icône personnalisée
     marker = folium.Marker(
-        location=[row['coor_1'], row['coor_2']],
+        location=[row['latitude'], row['longitude']],
         popup= popup_html,
         icon=folium.DivIcon(
             html=f"""
