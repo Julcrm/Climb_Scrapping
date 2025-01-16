@@ -25,16 +25,7 @@ map_folium = folium.Map(
 locations = df[['latitude', 'longitude']].values.tolist()
 marker_cluster = MarkerCluster().add_to(map_folium)
 
-# Ajouter les marqueurs
-icon_image = "https://img.icons8.com/?size=100&id=Gp8yKV8izL1K&format=png&color=000000"
 
-# Contenu du popup avec les informations à la ligne
-
-
-# Appliquer ast.literal_eval sur toutes les colonnes concernées
-columns_to_convert = ["type_escalade", "public", "exposition", "saison"]
-for col in columns_to_convert:
-    df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
 
 # Carte Folium
 m = folium.Map(location=[44.1, 5.1], zoom_start=12)
@@ -42,16 +33,16 @@ m = folium.Map(location=[44.1, 5.1], zoom_start=12)
 # Boucle pour ajouter les marqueurs
 for index, row in df.iterrows():
     # Construire le contenu du popup
-    types = ", ".join(row["type_escalade"])  # Transformation de la liste en chaîne
-    public = ", ".join(row["climbing_types"])
-    exposition = ", ".join(row["est"])
-    saison = ", ".join(row["north"])
+    types = row["climbing_types"]  # Transformation de la liste en chaîne
+    levels = row["levels"]
+    exposition = row["west"]
+    saison = row["north"]
     
     popup_html = f"""
     <div style='width:300px'>
     <b>Nom :</b> {row['name']}<br>
     <b>Type d'escalade :</b> {types}<br>
-    <b>Difficulté :</b> {public}<br>
+    <b>Difficulté :</b> {levels}<br>
     <b>Exposition :</b> {exposition}<br>
     <b>Période :</b> {saison}<br>
     </div>
